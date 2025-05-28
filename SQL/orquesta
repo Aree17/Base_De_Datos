@@ -1,0 +1,160 @@
+CREATE DATABASE orquesta;
+USE orquesta;
+CREATE TABLE orchestras(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(32) NOT NULL, 
+    rating DECIMAL NOT NULL,
+    city_origin VARCHAR(32) NOT NULL,
+    country_origin VARCHAR(32) NOT NULL,
+    year INT NOT NULL
+);
+
+
+CREATE TABLE concert(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    city VARCHAR(64) NOT NULL,
+    country VARCHAR(32) NOT NULL,
+    year INT NOT NULL,
+    rating DECIMAL NOT NULL,
+    orchesta_id INT,
+    FOREIGN KEY (orchesta_id) REFERENCES orchestras(id)
+);
+
+ALTER TABLE concert RENAME TO concerts;
+select * from concerts ORDER BY year desc;
+select * from concerts ORDER BY year asc;
+
+
+CREATE TABLE members(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(64) NOT NULL, 
+    position VARCHAR(32) NOT NULL,
+    experience int NOT NULL,
+    orchesta_id INT,
+    wage int NOT NULL,
+    FOREIGN KEY (orchesta_id) REFERENCES orchestras(id)
+);
+
+
+
+
+INSERT INTO orchestras
+(name, rating, city_origin, country_origin, year)
+VALUES
+("grupo 5", "10", "lima", "peru", "1990");
+
+INSERT INTO orchestras
+(name, rating, city_origin, country_origin, year)
+VALUES
+("guayacan", "12", "guayaquil", "ecuador", "1995");
+
+INSERT INTO orchestras
+(name, rating, city_origin, country_origin, year)
+VALUES
+("los dukes", "11", "machala", "ecuador", "2022");
+
+INSERT INTO orchestras
+(name, rating, city_origin, country_origin, year)
+VALUES
+("simon bolivar", "14", "roma", "ecuador", "2020");
+
+INSERT INTO orchestras
+(name, rating, city_origin, country_origin, year)
+VALUES
+("caracol", "7", "bogota", "colombia", "2013");
+select * from orchestras;
+
+
+INSERT INTO concerts
+(city, country, year, rating, orchesta_id)
+VALUES
+("machala", "Ecuador", "2013", "13", "5");
+
+INSERT INTO concerts
+(city, country, year, rating, orchesta_id)
+VALUES
+("lima", "Ecuador", "2013", "11", "2");
+
+INSERT INTO concerts
+(city, country, year, rating, orchesta_id)
+VALUES
+("lima", "Ecuador", "2013", "12", "1");
+
+INSERT INTO concerts
+(city, country, year, rating, orchesta_id)
+VALUES
+("quito", "Ecuador", "2022", "13", "4");
+
+INSERT INTO concerts
+(city, country, year, rating, orchesta_id)
+VALUES
+("duran", "Ecuador", "2019", "14", "");
+select * from concerts;
+
+
+INSERT INTO members
+(name, position, experience, orchesta_id, wage)
+VALUES
+("Luis", "cantante", "4", "1", "200");
+
+INSERT INTO members
+(name, position, experience, orchesta_id, wage)
+VALUES
+("Lucia", "violin", "3", "2", "200");
+
+INSERT INTO members
+(name, position, experience, orchesta_id, wage)
+VALUES
+("Jose", "viola", "2", "3", "200");
+
+INSERT INTO members
+(name, position, experience, orchesta_id, wage)
+VALUES
+("Julian", "flauta", "15", "6", "200");
+
+INSERT INTO members
+(name, position, experience, wage)
+VALUES
+("Leidy", "Saxofonista", "25", "200");
+select * from members;
+
+
+select * from orchestras where city_origin IN (SELECT DISTINCT city FROM concerts WHERE year=2013) AND id IN(SELECT DISTINCT orchesta_id FROM concerts WHERE year=2013);
+
+select * from orchestras where id IN (SELECT orchesta_id FROM concerts where id_orchesta IN (SELECT city, orchesta_id FROM concerts WHERE year=2013);
+SELECT city FROM concerts WHERE year=2013);
+select * from orchestras where city_origin AND id IN (SELECT DISTINCT city, orchesta_id FROM concerts WHERE year=2013);
+
+
+SELECT * 
+FROM orchestras 
+WHERE id IN (
+    SELECT concerts.orchestra_id 
+    FROM concerts 
+    WHERE year = 2013
+      AND city = (
+          SELECT orchestra.ciudad_origen 
+          FROM orchestras 
+          WHERE orchestras.id = concerts.orchestra_id
+      )
+);
+
+
+
+
+SELECT name, position FROM members where experience>20;
+SELECT * FROM members where experience>20 AND orchesta_id is NULL;
+SELECT name, position FROM members where experience>10 AND position='violinista';
+
+Select name, position FROM members WHERE experience>10 AND orchesta_id NOT IN(SELECT id FROM orchestras WHERE rating<8);
+
+
+
+
+
+
+
+
+
+
+
