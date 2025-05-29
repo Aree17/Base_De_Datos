@@ -1,0 +1,137 @@
+CREATE DATABASE ciclo_academico;
+USE ciclo_academico;
+CREATE TABLE course(
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(128) NOT NULL,
+  learning_path VARCHAR(128) NOT NULL,
+  short_description VARCHAR(1200) NOT NULL,
+  lecture_hours INT NOT NULL,
+  tutorial_hours INT NOT NULL,
+  ects_points INT NOT NULL,
+  has_exam BOOL,
+  has_project BOOL
+);
+CREATE TABLE academic_semester(
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  calendar_year INT NOT NULL,
+  term VARCHAR(128) NOT NULL,
+  birth_date DATE NOT NULL,
+ start_date DATE NOT NULL
+);
+CREATE TABLE lecturer(
+id INT AUTO_INCREMENT PRIMARY KEY,
+first_name VARCHAR(128) NOT NULL,
+last_name VARCHAR(128) NOT NULL,
+degree VARCHAR(32) NOT NULL,
+email VARCHAR(128) NOT NULL
+);
+CREATE TABLE student(
+id INT AUTO_INCREMENT PRIMARY KEY,
+first_name VARCHAR(128) NOT NULL,
+last_name VARCHAR(128) NOT NULL,
+email VARCHAR(128) NOT NULL,
+start_date DATE NOT NULL,
+  end_date DATE NOT NULL
+);
+CREATE TABLE course_edition(
+id INT AUTO_INCREMENT PRIMARY KEY,
+course_id INT,
+academic_semester_id INT,
+lecturer_id INT,
+FOREIGN KEY (course_id) REFERENCES course(id),
+FOREIGN KEY (academic_semester_id) REFERENCES academic_semester(id),
+FOREIGN KEY (lecturer_id) REFERENCES lecturer(id)
+);
+CREATE TABLE course_enrollment(
+course_edition_id INT,
+student_id INT,
+midterm_grade DECIMAL(5,2) NOT NULL,
+final_grade DECIMAL(5,2) NOT NULL,
+course_letter_grade VARCHAR(3) NOT NULL,
+passed BOOL NOT NULL,
+PRIMARY KEY (course_edition_id, student_id),
+FOREIGN KEY (course_edition_id) REFERENCES course_edition(id),
+FOREIGN KEY (student_id) REFERENCES student(id)
+);
+
+--INSERCIONES----------------------------------------------------------------------------------------------------------
+INSERT INTO course 
+(title, learning_path, short_description, lecture_hours, tutorial_hours, ects_points, has_exam, has_project) 
+VALUES
+('Introduction to Programming', 'Computer Science', 'Basic programming concepts using Python.', 30, 15, 6, TRUE, TRUE),
+('Data Structures', 'Computer Science', 'Study of data organization and manipulation.', 40, 20, 6, TRUE, TRUE),
+('Web Development', 'Software Engineering', 'Frontend and backend web technologies.', 35, 15, 5, FALSE, TRUE),
+('Databases', 'Computer Science', 'Relational databases and SQL.', 30, 20, 6, TRUE, TRUE),
+('Machine Learning', 'Artificial Intelligence', 'Supervised and unsupervised learning techniques.', 45, 20, 7, TRUE, TRUE),
+('Computer Networks', 'Information Technology', 'Networking fundamentals and protocols.', 40, 10, 5, TRUE, FALSE),
+('Software Engineering Principles', 'Software Engineering', 'Development methodologies and project management.', 30, 15, 6, FALSE, TRUE);
+
+
+INSERT INTO academic_semester 
+(calendar_year, term, birth_date, start_date) 
+VALUES
+(2023, 'Fall', '2023-09-01', '2023-09-15'),
+(2024, 'Spring', '2024-01-10', '2024-01-15'),
+(2024, 'Fall', '2024-09-01', '2024-09-15'),
+(2025, 'Spring', '2025-01-10', '2025-01-15'),
+(2022, 'Fall', '2022-09-01', '2022-09-15'),
+(2023, 'Spring', '2023-01-10', '2023-01-15'),
+(2025, 'Fall', '2025-09-01', '2025-09-15');
+
+
+INSERT INTO lecturer 
+(first_name, last_name, degree, email) 
+VALUES
+('Alice', 'Smith', 'PhD', 'alice.smith@university.edu'),
+('Bob', 'Johnson', 'PhD', 'bob.johnson@university.edu'),
+('Carol', 'Lee', 'MSc', 'carol.lee@university.edu'),
+('David', 'Brown', 'PhD', 'david.brown@university.edu'),
+('Eva', 'White', 'MSc', 'eva.white@university.edu'),
+('Frank', 'Green', 'PhD', 'frank.green@university.edu'),
+('Grace', 'Adams', 'PhD', 'grace.adams@university.edu');
+
+
+INSERT INTO student 
+(first_name, last_name, email, start_date, end_date) 
+VALUES
+('John', 'Doe', 'john.doe@student.edu', '2022-09-01', '2025-06-30'),
+('Jane', 'Smith', 'jane.smith@student.edu', '2023-09-01', '2026-06-30'),
+('Mike', 'Taylor', 'mike.taylor@student.edu', '2022-09-01', '2025-06-30'),
+('Anna', 'Davis', 'anna.davis@student.edu', '2023-01-15', '2026-01-15'),
+('Robert', 'Martin', 'robert.martin@student.edu', '2022-09-01', '2025-06-30'),
+('Emily', 'Clark', 'emily.clark@student.edu', '2023-09-01', '2026-06-30'),
+('Tom', 'Walker', 'tom.walker@student.edu', '2024-01-15', '2027-01-15');
+
+
+INSERT INTO course_edition 
+(course_id, academic_semester_id, lecturer_id) 
+VALUES
+(1, 1, 1),
+(2, 1, 2),
+(3, 2, 3),
+(4, 2, 4),
+(5, 3, 5),
+(6, 4, 6),
+(7, 5, 7);
+
+
+INSERT INTO course_enrollment 
+(course_edition_id, student_id, midterm_grade, final_grade, course_letter_grade, passed) 
+VALUES
+(1, 1, 75.00, 85.00, 'B+', TRUE),
+(1, 2, 65.00, 70.00, 'B-', TRUE),
+(2, 1, 80.00, 88.00, 'A-', TRUE),
+(3, 3, 60.00, 55.00, 'D', FALSE),
+(4, 4, 90.00, 93.00, 'A', TRUE),
+(5, 5, 70.00, 72.00, 'C+', TRUE),
+(6, 6, 85.00, 87.00, 'B+', TRUE);
+
+--CONSULTAS-----------------------------------------------------------------------------------------------------
+SELECT * FROM course;
+SELECT * FROM academic_semester;
+SELECT * FROM lecturer;
+SELECT * FROM student;
+SELECT * FROM course_edition;
+SELECT * FROM course_enrollment;
+
+
